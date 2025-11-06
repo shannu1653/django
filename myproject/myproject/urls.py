@@ -22,7 +22,7 @@ from basic.views import sampleInfo
 from basic.views import dynamicResponse
 from basic.views import add
 from basic.views import sub
-
+from app.views import example
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('greet/',sample),
@@ -30,6 +30,7 @@ urlpatterns = [
     path('info',sampleInfo),
     path('dynamic',dynamicResponse),
     path('add',add),
-    path('sub',sub)
+    path('sub',sub),
+    path('sample',example)
     
 ]
