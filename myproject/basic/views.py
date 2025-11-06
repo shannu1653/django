@@ -12,8 +12,8 @@ def sample1(request):
     return HttpResponse('welcome to django')
 
 def sampleInfo(request):
-    # data={'name':'shannu','age':'23','city':'hyd'}
-    data={'result':[4,2,3,4]}
+    data={'name':'shannu','age':'23','city':'Vizianagaram'}
+    #data={'result':[4,2,3,4]}
     return JsonResponse(data)
 
 
