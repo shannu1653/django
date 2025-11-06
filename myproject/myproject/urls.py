@@ -31,6 +31,6 @@ urlpatterns = [
     path('dynamic',dynamicResponse),
     path('add',add),
     path('sub',sub),
-    path('sample',example)
+    path('sam',example)
     
 ]
