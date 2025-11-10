@@ -38,21 +38,62 @@ def health(request):
     except Exception as e:
         return JsonResponse({"status": "error", "db": str(e)})
 
-# Add student view
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
+from .models import Student
+
 @csrf_exempt
 def addStudent(request):
-    if request.method == 'POST':
-        try:
-            data = json.loads(request.body)
-            student = Student.objects.create(
-                name=data.get('name'),
-                age=data.get('age'),
-                email=data.get('email')
-            )
-            return JsonResponse({"status": "success", 'id': student.id}, status=200)
-        except Exception as e:
-            return JsonResponse({"status": "error", "message": str(e)}, status=400)
-    return JsonResponse({"error": "use POST method"}, status=400)
+
+    # ✅ CREATE — POST
+    if request.method == "POST":
+        data = json.loads(request.body)
+        student = Student.objects.create(
+            name=data.get("name"),
+            age=data.get("age"),
+            email=data.get("email")
+        )
+        return JsonResponse({"status": "success", "id": student.id})
+
+    # ✅ READ — GET
+    elif request.method == "GET":
+        students = list(Student.objects.values())
+        return JsonResponse({"status": "success", "data": students})
+
+    # ✅ UPDATE — PUT
+    elif request.method == "PUT":
+        data = json.loads(request.body)
+        student_id = data.get("id")
+
+        # Get student first
+        student = Student.objects.get(id=student_id)
+
+        # Check if email already used by another student
+        if Student.objects.filter(email=data.get("email")).exclude(id=student_id).exists():
+            return JsonResponse({"status": "error", "message": "Email already exists"})
+
+        # Update fields
+        student.name = data.get("name", student.name)
+        student.age = data.get("age", student.age)
+        student.email = data.get("email", student.email)
+
+        student.save()
+        return JsonResponse({"status": "success", "message": "Updated successfully"})
+
+    # ✅ DELETE — DELETE
+    elif request.method == "DELETE":
+        data = json.loads(request.body)
+        student_id = data.get("id")
+
+        student = Student.objects.get(id=student_id)
+        student.delete()
+
+        return JsonResponse({"status": "success", "message": "Deleted successfully"})
+
+    # ✅ Invalid method
+    return JsonResponse({"status": "error", "message": "Method not allowed"}, status=405)
+
 
 
 #postdata
