@@ -43,7 +43,7 @@ urlpatterns = [
     path('health',health),
     path('addstudent/',addStudent),
     path('post/',post),
-    path('admin/', admin.site.urls),
+    path("admin/", admin.site.urls),
     path('insta/', include('insta.urls')),
     path('accounts/', include('django.contrib.auth.urls')), 
  ] # <-- login/logout URLs
