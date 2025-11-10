@@ -1,0 +1,189 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Insta Feed</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #ff4b2b, #ff416c, #6a11cb, #2575fc);
+            background-size: 400% 400%;
+            animation: gradientBG 12s ease infinite;
+            font-family: 'Poppins', sans-serif;
+            padding: 20px;
+            color: white;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 45px;
+            margin-bottom: 35px;
+            font-weight: 700;
+            text-shadow: 0 0 15px rgba(255,255,255,0.9);
+        }
+
+        .feed-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .card {
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(15px);
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 0 15px rgba(255,255,255,0.4);
+            animation: fadeIn 0.8s ease;
+            transition: 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 0 25px rgba(255,255,255,0.9);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(40px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .post-img {
+            width: 100%;
+            height: 280px;
+            border-radius: 15px;
+            object-fit: cover;
+            box-shadow: 0 0 15px rgba(0,0,0,0.7);
+            margin-bottom: 15px;
+        }
+
+        .title {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            text-shadow: 0 0 10px white;
+        }
+
+        .desc {
+            font-size: 15px;
+            opacity: 0.95;
+            margin-bottom: 12px;
+        }
+
+        .date, .location, .visibility {
+            font-size: 14px;
+            opacity: 0.8;
+            margin-bottom: 8px;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 6px 14px;
+            font-size: 13px;
+            font-weight: 600;
+            border-radius: 30px;
+            color: white;
+            background: linear-gradient(45deg, #ff0080, #ff8c00, #40e0d0);
+            margin-bottom: 8px;
+        }
+
+        .like-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 8px;
+            background: #ff416c;
+            color: white;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        .like-btn.liked {
+            background: #00ff9d;
+        }
+
+        .no-posts {
+            text-align: center;
+            font-size: 25px;
+            margin-top: 80px;
+            text-shadow: 0 0 15px white;
+        }
+
+        .add-btn {
+            display: block;
+            width: max-content;
+            margin: 30px auto;
+            padding: 12px 25px;
+            background: linear-gradient(45deg, #00ff9d, #00c3ff);
+            color: white;
+            font-size: 18px;
+            font-weight: 700;
+            text-decoration: none;
+            border-radius: 12px;
+            transition: 0.3s;
+        }
+
+        .add-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px white;
+        }
+    </style>
+</head>
+<body>
+
+<h1>📸 Insta Feed</h1>
+
+<a href="{% url 'addpost' %}" class="add-btn">➕ Create New Post</a>
+
+{% if posts %}
+<div class="feed-container">
+
+    {% for post in posts %}
+        {% if post.is_public %}
+        <div class="card">
+            <img src="{{ post.image.url }}" class="post-img">
+
+            <div class="title">{{ post.title }}</div>
+
+            <div class="desc">{{ post.description }}</div>
+
+            <div class="date">📅 Posted: {{ post.created_at|timesince }} ago</div>
+
+            {% if post.location %}
+            <div class="location">📍 {{ post.location }}</div>
+            {% endif %}
+
+            {% if post.tag_people %}
+            <div class="tag">👤 {{ post.tag_people }}</div>
+            {% endif %}
+
+            {% if post.mood %}
+            <div class="tag">🎭 Mood: {{ post.mood }}</div>
+            {% endif %}
+
+            <div class="visibility">
+                {% if post.is_public %}
+                    🔓 Public
+                {% else %}
+                    🔒 Private
+                {% endif %}
+            </div>
+
+            <button class="like-btn" onclick="this.classList.toggle('liked')">❤️ Like</button>
+        </div>
+        {% endif %}
+    {% endfor %}
+
+</div>
+{% else %}
+    <div class="no-posts">No posts available. Create your first post! 🚀</div>
+{% endif %}
+
+</body>
+</html>

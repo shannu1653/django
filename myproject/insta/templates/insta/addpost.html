@@ -1,0 +1,123 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Post</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #ff416c, #ff4b2b, #6a11cb, #2575fc);
+            background-size: 400% 400%;
+            animation: gradientBG 12s ease infinite;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .form-container {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(20px);
+            padding: 30px 40px;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 0 20px rgba(255,255,255,0.4);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 32px;
+            text-shadow: 0 0 10px rgba(255,255,255,0.7);
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .input-field {
+            padding: 12px 15px;
+            margin-bottom: 15px;
+            border-radius: 12px;
+            border: none;
+            outline: none;
+            font-size: 16px;
+        }
+
+        input[type="file"] {
+            background: rgba(255,255,255,0.15);
+            color: white;
+        }
+
+        label {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .checkbox-group label {
+            font-weight: 500;
+        }
+
+        .submit-btn {
+            padding: 12px;
+            font-size: 18px;
+            font-weight: 700;
+            border-radius: 12px;
+            border: none;
+            background: linear-gradient(45deg, #00ff9d, #00c3ff);
+            color: white;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .submit-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px white;
+        }
+    </style>
+</head>
+<body>
+
+<div class="form-container">
+    <h1>Create Post</h1>
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        {{ form.title }}
+        {{ form.description }}
+        {{ form.post_date }}
+        {{ form.location }}
+        {{ form.mood }}
+        {{ form.tag_people }}
+
+        <div class="checkbox-group">
+            <label>{{ form.is_public }} Public</label>
+            <label>{{ form.allow_comments }} Allow Comments</label>
+            <label>{{ form.allow_sharing }} Allow Sharing</label>
+        </div>
+
+        {{ form.image }}
+
+        <button type="submit" class="submit-btn">➕ Post</button>
+    </form>
+</div>
+
+</body>
+</html>
