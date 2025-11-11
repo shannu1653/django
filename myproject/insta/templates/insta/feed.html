@@ -1,189 +1,352 @@
 {% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Insta Feed</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            background: linear-gradient(135deg, #ff4b2b, #ff416c, #6a11cb, #2575fc);
-            background-size: 400% 400%;
-            animation: gradientBG 12s ease infinite;
-            font-family: 'Poppins', sans-serif;
-            padding: 20px;
-            color: white;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Insta Feed — Smart Edition</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
+  <style>
+    :root {
+      --bg1: #ff4b2b;
+      --bg2: #ff416c;
+      --bg3: #6a11cb;
+      --bg4: #2575fc;
+      --card-bg: rgba(255,255,255,0.15);
+      --text-color: white;
+      --shadow-color: rgba(255,255,255,0.5);
+      --btn-like: #ff416c;
+      --btn-liked: #00ff9d;
+      --btn-comment: #2575fc;
+      --btn-share: #6a11cb;
+    }
 
-        h1 {
-            text-align: center;
-            font-size: 45px;
-            margin-bottom: 35px;
-            font-weight: 700;
-            text-shadow: 0 0 15px rgba(255,255,255,0.9);
-        }
+    body.dark {
+      --bg1: #1a1a1a;
+      --bg2: #222;
+      --bg3: #333;
+      --bg4: #555;
+      --card-bg: rgba(255,255,255,0.08);
+      --text-color: #f5f5f5;
+      --shadow-color: rgba(255,255,255,0.2);
+      --btn-like: #ff5c93;
+      --btn-liked: #00ffb2;
+      --btn-comment: #3399ff;
+      --btn-share: #9955ff;
+    }
 
-        .feed-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 25px;
-        }
+    body {
+      background: linear-gradient(135deg, var(--bg1), var(--bg2), var(--bg3), var(--bg4));
+      background-size: 400% 400%;
+      animation: gradientBG 12s ease infinite;
+      font-family: 'Poppins', sans-serif;
+      padding: 20px;
+      color: var(--text-color);
+      transition: background 1s, color 0.5s;
+    }
 
-        .card {
-            background: rgba(255,255,255,0.15);
-            backdrop-filter: blur(15px);
-            padding: 20px;
-            border-radius: 20px;
-            box-shadow: 0 0 15px rgba(255,255,255,0.4);
-            animation: fadeIn 0.8s ease;
-            transition: 0.3s;
-        }
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
 
-        .card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 0 25px rgba(255,255,255,0.9);
-        }
+    h1 {
+      text-align: center;
+      font-size: 45px;
+      margin-bottom: 25px;
+      font-weight: 700;
+      text-shadow: 0 0 15px var(--shadow-color);
+    }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(40px); }
-            to   { opacity: 1; transform: translateY(0); }
-        }
+    .controls {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin-bottom: 25px;
+    }
 
-        .post-img {
-            width: 100%;
-            height: 280px;
-            border-radius: 15px;
-            object-fit: cover;
-            box-shadow: 0 0 15px rgba(0,0,0,0.7);
-            margin-bottom: 15px;
-        }
+    input[type="text"], select {
+      padding: 10px;
+      border-radius: 10px;
+      border: none;
+      font-size: 15px;
+      background: rgba(255,255,255,0.15);
+      color: var(--text-color);
+      outline: none;
+      backdrop-filter: blur(10px);
+    }
 
-        .title {
-            font-size: 22px;
-            font-weight: 700;
-            margin-bottom: 8px;
-            text-shadow: 0 0 10px white;
-        }
+    .feed-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 25px;
+    }
 
-        .desc {
-            font-size: 15px;
-            opacity: 0.95;
-            margin-bottom: 12px;
-        }
+    .card {
+      background: var(--card-bg);
+      backdrop-filter: blur(15px);
+      padding: 20px;
+      border-radius: 20px;
+      box-shadow: 0 0 15px var(--shadow-color);
+      animation: fadeIn 0.8s ease;
+      transition: 0.3s;
+      position: relative;
+    }
 
-        .date, .location, .visibility {
-            font-size: 14px;
-            opacity: 0.8;
-            margin-bottom: 8px;
-        }
+    .card:hover { transform: translateY(-8px); box-shadow: 0 0 25px var(--shadow-color); }
 
-        .tag {
-            display: inline-block;
-            padding: 6px 14px;
-            font-size: 13px;
-            font-weight: 600;
-            border-radius: 30px;
-            color: white;
-            background: linear-gradient(45deg, #ff0080, #ff8c00, #40e0d0);
-            margin-bottom: 8px;
-        }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
 
-        .like-btn {
-            padding: 6px 12px;
-            border: none;
-            border-radius: 8px;
-            background: #ff416c;
-            color: white;
-            cursor: pointer;
-            font-weight: 600;
-            margin-top: 10px;
-        }
+    .post-img {
+      width: 100%;
+      height: 280px;
+      border-radius: 15px;
+      object-fit: cover;
+      box-shadow: 0 0 15px rgba(0,0,0,0.7);
+      margin-bottom: 15px;
+    }
 
-        .like-btn.liked {
-            background: #00ff9d;
-        }
+    .title { font-size: 22px; font-weight: 700; margin-bottom: 8px; }
+    .desc { font-size: 15px; opacity: 0.95; margin-bottom: 8px; }
+    .caption { font-style: italic; font-size: 14px; color: #00ffb2; margin-bottom: 10px; display: block; }
 
-        .no-posts {
-            text-align: center;
-            font-size: 25px;
-            margin-top: 80px;
-            text-shadow: 0 0 15px white;
-        }
+    .info { font-size: 13px; opacity: 0.8; margin-bottom: 5px; }
 
-        .add-btn {
-            display: block;
-            width: max-content;
-            margin: 30px auto;
-            padding: 12px 25px;
-            background: linear-gradient(45deg, #00ff9d, #00c3ff);
-            color: white;
-            font-size: 18px;
-            font-weight: 700;
-            text-decoration: none;
-            border-radius: 12px;
-            transition: 0.3s;
-        }
+    .tag {
+      display: inline-block;
+      padding: 6px 14px;
+      font-size: 13px;
+      border-radius: 30px;
+      background: linear-gradient(45deg, #ff0080, #ff8c00, #40e0d0);
+      color: white;
+      margin: 5px 3px;
+    }
 
-        .add-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 0 20px white;
-        }
-    </style>
+    .like-btn, .comment-btn, .share-btn {
+      padding: 8px 12px;
+      border: none;
+      border-radius: 8px;
+      color: white;
+      cursor: pointer;
+      font-weight: 600;
+      margin: 5px 3px;
+      transition: 0.3s;
+    }
+
+    .like-btn { background: var(--btn-like); }
+    .like-btn.liked { background: var(--btn-liked); }
+    .comment-btn { background: var(--btn-comment); }
+    .share-btn { background: var(--btn-share); }
+
+    .comments-section {
+      margin-top: 10px;
+      background: rgba(0,0,0,0.2);
+      padding: 10px;
+      border-radius: 10px;
+      display: none;
+    }
+
+    .comment { margin-bottom: 5px; font-size: 14px; }
+    .comment-input {
+      width: 100%;
+      padding: 6px;
+      border: none;
+      border-radius: 6px;
+      margin-top: 6px;
+      font-family: inherit;
+    }
+
+    #topBtn, #themeBtn, #addPostBtn {
+      position: fixed;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: 0 0 15px rgba(255,255,255,0.7);
+      color: white;
+      transition: 0.3s;
+      z-index: 1000;
+    }
+
+    /* 🌟 Floating Add Post Button */
+    #addPostBtn {
+      bottom: 25px;
+      right: 25px;
+      width: 65px;
+      height: 65px;
+      font-size: 35px;
+      font-weight: bold;
+      border: none;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #ff0080, #ff8c00, #40e0d0, #6a11cb);
+      background-size: 400%;
+      animation: glowPulse 4s infinite, moveGradient 6s linear infinite;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    @keyframes glowPulse {
+      0%, 100% { box-shadow: 0 0 20px #ff0080, 0 0 40px #40e0d0; transform: scale(1); }
+      50% { box-shadow: 0 0 35px #40e0d0, 0 0 60px #ff8c00; transform: scale(1.1); }
+    }
+
+    @keyframes moveGradient {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    #topBtn {
+      bottom: 100px;
+      right: 25px;
+      background: #00c3ff;
+      padding: 12px 16px;
+      display: none;
+      font-size: 18px;
+    }
+
+    #themeBtn {
+      top: 20px;
+      right: 25px;
+      background: #00000050;
+      padding: 10px 14px;
+      font-size: 20px;
+    }
+
+    .no-posts {
+      text-align: center;
+      font-size: 20px;
+      margin-top: 40px;
+      font-weight: 600;
+    }
+
+    @media (max-width: 768px) {
+      h1 { font-size: 32px; }
+      .post-img { height: 220px; }
+      .feed-container { grid-template-columns: 1fr; }
+      #addPostBtn { width: 55px; height: 55px; font-size: 28px; }
+    }
+  </style>
 </head>
 <body>
 
-<h1>📸 Insta Feed</h1>
+  <button id="themeBtn" onclick="toggleTheme()">🌙</button>
+  <h1>📸 Insta Feed</h1>
 
-<a href="{% url 'addpost' %}" class="add-btn">➕ Create New Post</a>
+  <div class="controls">
+    <input type="text" id="searchInput" placeholder="🔍 Search posts...">
+    <select id="moodFilter">
+      <option value="">Filter by Mood</option>
+      <option value="happy">Happy</option>
+      <option value="sad">Sad</option>
+      <option value="angry">Angry</option>
+      <option value="excited">Excited</option>
+      <option value="chill">Chill</option>
+      <option value="romantic">Romantic</option>
+    </select>
+  </div>
 
-{% if posts %}
-<div class="feed-container">
-
+  {% if posts %}
+  <div class="feed-container" id="feedContainer">
     {% for post in posts %}
-        {% if post.is_public %}
-        <div class="card">
-            <img src="{{ post.image.url }}" class="post-img">
+    <div class="card" data-title="{{ post.title|lower }}" data-mood="{{ post.mood|lower }}">
+      <img src="{{ post.image.url }}" class="post-img">
+      <div class="title">{{ post.title }}</div>
+      <div class="desc">{{ post.description }}</div>
+      {% if post.caption %}<span class="caption">“{{ post.caption }}”</span>{% endif %}
+      <div class="info">📅 {{ post.created_at|timesince }} ago</div>
+      {% if post.location %}<div class="info">📍 {{ post.location }}</div>{% endif %}
+      {% if post.tag_people %}<div class="tag">👤 {{ post.tag_people }}</div>{% endif %}
+      {% if post.mood %}<div class="tag">{{ post.mood }}</div>{% endif %}
 
-            <div class="title">{{ post.title }}</div>
+      <button class="like-btn" onclick="toggleLike(this)">❤️ Like <span class="count">0</span></button>
+      <button class="comment-btn" onclick="toggleComments(this)">💬 Comment</button>
+      <button class="share-btn" onclick="copyLink('{{ request.build_absolute_uri }}')">🔗 Share</button>
 
-            <div class="desc">{{ post.description }}</div>
-
-            <div class="date">📅 Posted: {{ post.created_at|timesince }} ago</div>
-
-            {% if post.location %}
-            <div class="location">📍 {{ post.location }}</div>
-            {% endif %}
-
-            {% if post.tag_people %}
-            <div class="tag">👤 {{ post.tag_people }}</div>
-            {% endif %}
-
-            {% if post.mood %}
-            <div class="tag">🎭 Mood: {{ post.mood }}</div>
-            {% endif %}
-
-            <div class="visibility">
-                {% if post.is_public %}
-                    🔓 Public
-                {% else %}
-                    🔒 Private
-                {% endif %}
-            </div>
-
-            <button class="like-btn" onclick="this.classList.toggle('liked')">❤️ Like</button>
-        </div>
-        {% endif %}
+      <div class="comments-section">
+        <div class="comment">✨ Be the first to comment!</div>
+        <input type="text" class="comment-input" placeholder="Write a comment..." onkeypress="addComment(event, this)">
+      </div>
+    </div>
     {% endfor %}
+  </div>
+  {% else %}
+    <div class="no-posts">No posts yet. Create your first one! 🚀</div>
+  {% endif %}
 
-</div>
-{% else %}
-    <div class="no-posts">No posts available. Create your first post! 🚀</div>
-{% endif %}
+   <button id="addPostBtn" onclick="location.href='{% url 'addpost' %}'">➕</button>
 
+
+
+  <button id="topBtn" onclick="scrollToTop()">⬆</button>
+
+  <script>
+    function toggleLike(btn) {
+      const countEl = btn.querySelector('.count');
+      let count = parseInt(countEl.textContent);
+      if (btn.classList.contains('liked')) {
+        btn.classList.remove('liked');
+        countEl.textContent = count - 1;
+        btn.innerHTML = `❤️ Like <span class='count'>${countEl.textContent}</span>`;
+      } else {
+        btn.classList.add('liked');
+        countEl.textContent = count + 1;
+        btn.innerHTML = `💚 Liked <span class='count'>${countEl.textContent}</span>`;
+      }
+    }
+
+    function toggleComments(btn) {
+      const section = btn.parentNode.querySelector('.comments-section');
+      section.style.display = section.style.display === 'block' ? 'none' : 'block';
+    }
+
+    function addComment(event, input) {
+      if (event.key === 'Enter' && input.value.trim() !== '') {
+        const comment = document.createElement('div');
+        comment.className = 'comment';
+        comment.textContent = `💬 ${input.value}`;
+        input.parentNode.insertBefore(comment, input);
+        input.value = '';
+      }
+    }
+
+    function copyLink(link) {
+      navigator.clipboard.writeText(link);
+      alert('🔗 Post link copied!');
+    }
+
+    function toggleTheme() {
+      document.body.classList.toggle('dark');
+      document.getElementById('themeBtn').textContent =
+        document.body.classList.contains('dark') ? '☀️' : '🌙';
+    }
+
+    window.onscroll = function() {
+      document.getElementById('topBtn').style.display =
+        (document.documentElement.scrollTop > 200) ? 'block' : 'none';
+    };
+
+    function scrollToTop() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    const searchInput = document.getElementById('searchInput');
+    const moodFilter = document.getElementById('moodFilter');
+    searchInput.addEventListener('input', filterPosts);
+    moodFilter.addEventListener('change', filterPosts);
+
+    function filterPosts() {
+      const term = searchInput.value.toLowerCase();
+      const mood = moodFilter.value.toLowerCase();
+      document.querySelectorAll('.card').forEach(card => {
+        const matchesText = card.dataset.title.includes(term);
+        const matchesMood = !mood || card.dataset.mood === mood;
+        card.style.display = matchesText && matchesMood ? 'block' : 'none';
+      });
+    }
+  </script>
 </body>
 </html>

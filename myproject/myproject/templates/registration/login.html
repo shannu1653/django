@@ -1,66 +1,19 @@
-{% load static %}
 <!DOCTYPE html>
 <html>
 <head>
     <title>Login</title>
-    <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background: linear-gradient(135deg, #ff4b2b, #ff416c, #6a11cb, #2575fc);
-            background-size: 400% 400%;
-            animation: gradientBG 12s ease infinite;
-            font-family: 'Poppins', sans-serif;
-            color: white;
-        }
-
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        .login-box {
-            background: rgba(0,0,0,0.5);
-            padding: 30px;
-            border-radius: 15px;
-            text-align: center;
-            box-shadow: 0 0 20px rgba(255,255,255,0.5);
-        }
-
-        input[type="text"], input[type="password"] {
-            padding: 10px;
-            margin: 10px 0;
-            width: 100%;
-            border-radius: 8px;
-            border: none;
-        }
-
-        button {
-            padding: 10px 20px;
-            background: linear-gradient(45deg, #00ff9d, #00c3ff);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        button:hover {
-            transform: scale(1.05);
-        }
-    </style>
 </head>
 <body>
-    <div class="login-box">
-        <h2>Login</h2>
-        <form method="post">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit">Login</button>
-        </form>
-    </div>
+
+<h2>Login</h2>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Login</button>
+</form>
+
+<p>Don't have an account? <a href="/accounts/signup/">Sign up</a></p>
+
 </body>
 </html>
