@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'basic',
     'app',        # ✅ make sure folder name is 'app'
     'insta',
+    'emotionapp',
 ]
 
 # ✅ Middleware
@@ -46,6 +47,14 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'basic.middleware.basicMiddleware',
+    'basic.middleware.UsernameMiddleware',
+    'basic.middleware.EmailMiddleware',
+    'basic.middleware.PasswordMiddleware',
+    'basic.middleware.MovieReviesMiddleware',
+
+
+
 ]
 
 # ✅ URL Config
@@ -71,13 +80,33 @@ TEMPLATES = [
 # ✅ WSGI Application
 WSGI_APPLICATION = 'myproject.wsgi.application'
 
-# ✅ Database (SQLite for simplicity)
+# # ✅ Database (SQLite for simplicity)
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / "db.sqlite3",
+#     }
+# }
+
+
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / "db.sqlite3",
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': "53r",
+         'USER':"root",
+         'PASSWORD':'Shanmukha@2002',
+         "PORT":"3308",
+         "OPTIONS":{
+            'charset':'utf8mb4',
+            'init_command':"SET Sql_mode='STRICT_TRANS_TABLES'"
+            }
     }
 }
+
+
+
+
 
 # ✅ Password Validators
 AUTH_PASSWORD_VALIDATORS = [
