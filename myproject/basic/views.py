@@ -244,7 +244,7 @@ def login(request):
 
 
 
-#movie
+#⚡curd on movie review scenario formdata.
 @csrf_exempt
 def Movies(request):
 
@@ -298,17 +298,6 @@ def Movies(request):
             if budget>=ref_budget:
                 result.append(b)
         return JsonResponse({"status": "ok", "data": result}, status=200)
-
-        
-
-
-        
-
-    
-
-
-
-
     elif request.method == "DELETE":
         try:
             data = json.loads(request.body)
