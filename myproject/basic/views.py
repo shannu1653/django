@@ -9,7 +9,8 @@ from basic.models import Movie
 from django.contrib.auth.hashers import make_password,check_password
 import jwt
 from django.conf import settings
-
+from datetime import datetime,timedelta
+from zoneinfo import ZoneInfo
 # Simple views
 def sample(request):
     return HttpResponse('hello world!')
@@ -175,21 +176,63 @@ def post(request):
 
 @csrf_exempt
 def Signup(request):
-    if request.method=="POST":
-        data=json.loads(request.body)
-        print(data)
-        user=Users.objects.create(
-            username=data.get('username'),
+
+    if request.method == "POST":
+        # Only POST reads JSON
+        if not request.body:
+            return JsonResponse({"error": "Empty body"}, status=400)
+
+        data = json.loads(request.body)
+
+        user = Users.objects.create(
+            username=data.get("username"),
             email=data.get("email"),
-            password=make_password(data.get("password"))
+            password=make_password(data.get("password")),
         )
-        return JsonResponse({"status":"success"},status=200)
+        return JsonResponse({"status": "success"}, status=200)
+
+    elif request.method == "PUT":
+        # Only PUT reads JSON
+        if not request.body:
+            return JsonResponse({"error": "Empty body"}, status=400)
+             
+
+        data = json.loads(request.body)
+        print(data,"1")
+        ref_id = data.get("id")
+        print(ref_id,'2')
+
+        try:
+            details = Users.objects.get(id=ref_id)
+            print(details.username,'4')
+            print(details,'3')
+        except Users.DoesNotExist:
+            return JsonResponse({"error": "User not found"}, status=404)
+
+        if "username" in data:
+            details.username = data["username"]
+        if "email" in data:
+            details.email = data["email"]
+
+        if "password" in data:
+            details.password = make_password(data["password"])
+
+        details.save()
+        print(details.username,'last')
+
+        updated_data = list(Users.objects.filter(id=ref_id).values())
+        print(updated_data)
+        return JsonResponse({"status": "success", "updated_data": updated_data}, status=200)
+        
+
+    # GET request (no JSON load here)
+    return JsonResponse({"message": "Signup API. Use POST or PUT."}, status=200)
+
+
+
+
 
 from datetime import datetime
-
-
-
-
 #example for jwt token creating jwt token
 @csrf_exempt
 def login(request):
@@ -211,11 +254,13 @@ def login(request):
 
         try:
             user = Users.objects.get(username=username)
+            issued_time=datetime.now(ZoneInfo("Asia/Kolkata"))
+            expired_time=issued_time+timedelta(minutes=25)
             if check_password(password, user.password):
                 print(user.password)
                # token="a json web token"
                 #creating jwt token
-                payload={"username":username,"email":user.email,"id":user.id}
+                payload={"username":username,"email":user.email,"id":user.id,"exp":expired_time}
                 token=jwt.encode(payload,settings.SECRET_KEY,algorithm="HS256")
                 # FIXED BLOCK ↓↓↓
                 # user_data = {
@@ -224,12 +269,8 @@ def login(request):
                 #     if field.name != "password"
                 # }
 
-                return JsonResponse({"status": 'successfully logged in',"token":token}, status=200)
-            else:
-                return JsonResponse({
-                    "status": 'failure',
-                    "message": 'invalid password'
-                }, status=400)
+                return JsonResponse({"status":'successfully loggedin','token':token,"issued_at":issued_time,"expired at":expired_time,"expired_in":int((expired_time-issued_time).total_seconds()/60)},status=200)
+            return JsonResponse({"status": 'failure',"message": 'invalid password'}, status=400)
 
         except Users.DoesNotExist:
             return JsonResponse({
@@ -239,8 +280,20 @@ def login(request):
 
     return JsonResponse({"error": "POST method required"}, status=405)
 
-
-
+@csrf_exempt
+def getAllUsers(request):
+    if request.method=="GET":
+        users=list(Users.objects.values())
+        print(request.token_data,"token_data in view")
+        print(request.token_data.get("username"),"username from token")
+        print(users,"users list")
+        for user in users:
+            print(user["username"],"username from users list")
+            if  user["username"] == request.token_data.get("username"):
+                return JsonResponse({"status":"success","loggedin_user":user["username"],"data":users},status=200)
+        else:   
+                return JsonResponse({"error":"unauthorized access"},status=401)
+        
 
 
 
