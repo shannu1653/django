@@ -28,5 +28,12 @@ class Movie(models.Model):
     Budget=models.CharField(max_length=100)
     Rating = models.CharField(max_length=10)
 
+#5.class creating for creadit card info
+class CreadiCard(models.Model):
+    username=models.CharField(max_length=100)
+    password=models.CharField(max_length=100)
+    ccnum = models.CharField(max_length=400)
+    limit = models.FloatField()   
+    outstanding = models.IntegerField(default=0)
 
 
