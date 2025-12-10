@@ -5,7 +5,7 @@ import json
 from django.views.decorators.csrf import csrf_exempt
 from .models import Student  # ✅ Correct import from models
 from .models import PostData,Users
-from basic.models import Movie
+from basic.models import Movie,CreadiCard
 from django.contrib.auth.hashers import make_password,check_password
 import jwt
 from django.conf import settings
@@ -387,5 +387,42 @@ def Movies(request):
  
 
 
+# 1️⃣ CREATE CREDIT CARD
+@csrf_exempt
+def create_credit_card(request):
 
- 
+    if request.method == "POST":
+        data = json.loads(request.body)
+
+        username = data.get("username")
+        password = data.get("password")
+        ccnum = data.get("ccnum")
+        limit = data.get("limit")
+        outstanding = data.get("outstanding", 0)
+
+        if not ccnum:
+            return JsonResponse({"error": "ccnum required"}, status=400)
+
+        # ⭐ MASK CC NUMBER BEFORE SAVING IN DB
+        masked_ccnum = "*" * (len(ccnum) - 4) + ccnum[-4:]
+        print("Masked CCNUM:", masked_ccnum)
+
+        # Save MASKED ccnum in DB (NOT original)
+        user = CreadiCard.objects.create(
+            username=username,
+            password=make_password(password),
+            ccnum=masked_ccnum,      # ⭐ masked stored in DB
+            limit=int(limit),
+            outstanding=int(outstanding)
+        )
+
+        return JsonResponse({
+            "status": "success",
+            "data": {
+                "id": user.id,
+                "username": user.username,
+                "ccnum": user.ccnum,      # already masked
+                "limit": user.limit,
+                "outstanding": user.outstanding
+            }
+        })
