@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <h2>Upload image for Emotion Detection</h2>
+    <form action="/predict/" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="file" name="image">
+        <button type="submit">Predict Emotion</button>
+    </form>
+</body>
+</html>
