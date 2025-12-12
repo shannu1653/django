@@ -3,6 +3,8 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 from django.shortcuts import render
+from basic.views import Signup,Movies,create_credit_card
+
 
 # ✅ Home Page (shows all links)
 def home(request):
@@ -11,10 +13,12 @@ def home(request):
 # ✅ Import basic app views
 from basic.views import (
     sample, sample1, sampleInfo, dynamicResponse,
-    add, sub, health, addStudent, post
+    add, sub, health, addStudent,post, login, getAllUsers
 )
 
 from app.views import example
+
+from emotionapp import views
 
 urlpatterns = [
     # ✅ HOME PAGE
@@ -32,7 +36,7 @@ urlpatterns = [
     path('sub/', sub),
     path('sam/', example),
     path('health/', health),
-    path('addstudent/', addStudent),
+    path('addstudent/',addStudent),
     path('post/', post),
 
     # ✅ Insta app URLs
@@ -40,8 +44,21 @@ urlpatterns = [
 
     # ✅ Django login / logout pages
     path('accounts/', include('django.contrib.auth.urls')),
+    path('signup/',Signup),
+    path('login/',login),
+    path('users/', getAllUsers),
+    path('creadit/', create_credit_card),
+
+    #movies
+    path('movies/',Movies),
+
+    path('', views.upload_page),
+    path('predict/', views.predict_emotion),
+
+
 ]
 
 # ✅ MEDIA (needed for image display)
+
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
