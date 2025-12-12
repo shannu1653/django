@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'app',        # ✅ make sure folder name is 'app'
     'insta',
     'emotionapp',
+    
 ]
 
 # ✅ Middleware
@@ -52,6 +53,8 @@ MIDDLEWARE = [
     'basic.middleware.EmailMiddleware',
     'basic.middleware.PasswordMiddleware',
     'basic.middleware.MovieReviesMiddleware',
+    'basic.middleware.authenticate_middleware',
+
 
 
 
